@@ -1,0 +1,57 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
+
+}
+
+#upload {
+  position: absolute;
+  border-radius: 2px;
+  margin: 10px;
+  width: auto;
+  height: auto;
+  bottom: 20px;
+  padding: 20px;
+  background-color: #E5E5E5;
+}
+
+.upload-form__wrapper {
+  padding-bottom: 10px;
+
+}
+
+.upload-form__label {
+  position: relative;
+  padding-bottom: 10px;
+  text-align: center;
+
+}
+.upload-form__input {
+
+  -ms-grid-column: 2;
+  -ms-grid-column-span: 2;
+  grid-column: 2 / span 2;
+}
+
+button {
+  position: relative;
+  margin: 10px;
+  margin-left: 40%;
+  
+}

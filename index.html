@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Mapbox test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link
+      href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+  </head>
+  <body>
+  
+    <div id="map"></div>
+    
+      <div id="upload">
+        <form
+          class="upload-form__select"
+          id="upload-form">
+          <div class="upload-form__wrapper">
+            <label class="upload-form__label-title">city</label>
+          </div>
+          <div class="upload-form__wrapper">
+            <input
+              type="string"
+              id="city"
+              class="upload-form__input"
+              autocomplete="on"
+              placeholder="saint-petersburg"
+              value
+              required>
+          </div>
+          <div class="upload-form__wrapper">
+            <label class="upload-form__label">coordinates</label>
+          </div>
+          <div class="upload-form__wrapper">
+            <div class="upload-form__input">
+              <span class="upload-form__label">x_from
+                <input
+                  type="text"
+                  id="x_from"
+                  class="upload-form__coordinates"
+                  autocomplete="on"
+                  placeholder="59.944548"
+                  value
+                  required>
+              </span>
+            </div>
+            <div class="upload-form__input">
+              <span class="upload-form__label">y_from
+                <input
+                  type="text"
+                  id="y_from"
+                  class="upload-form__coordinates"
+                  autocomplete="on"
+                  placeholder="30.304617"
+                  value
+                  required>
+              </span>
+            </div>
+          </div>
+          <div class="upload-form__wrapper">
+            <label class="upload-form__label">view_distance</label>
+          </div>
+          <div class="upload-form__wrapper">
+            <input
+              type="text"
+              id="view_distance"
+              class="upload-form__input"
+              autocomplete="on"
+              step="100"
+              placeholder="700"
+              required
+              value>
+          </div>
+          <button type="submit" class="upload-form__submit" id="upload-submit">
+            Отправить
+          </button>
+        </form>
+      </div>
+    <script src="./api.js"></script>
+  </body>
+</html>
