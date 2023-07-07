@@ -1,7 +1,7 @@
 //require('dotenv').config()
 
 
-mapboxgl.accessToken = TOKEN;
+mapboxgl.accessToken = "pk.eyJ1Ijoic2hhbS1hbmFzdGFzaWEiLCJhIjoiY2xpeDdiMTZqMDU1ODNlbzE1eTU3eDB3cSJ9.v94ID-OfPNLsdY3TkQ3RHQ";
 
 const map = new mapboxgl.Map({
   container: "map",
@@ -17,12 +17,11 @@ const cityElement = document.getElementById('city');
 const xFormElement = document.getElementById('x_from');
 const yFormElement = document.getElementById('y_from');
 const viewElement = document.getElementById('view_distance');
-const searchFormElement = document.getElementById('upload-submit');
+const sendFormElement = document.getElementById('upload-submit');
 
 const marker = new mapboxgl.Marker({
   'color': '#314ccd'
 })
-
 map.on('click', (evt) => {
 
   const coord = evt.lngLat;
@@ -31,28 +30,76 @@ map.on('click', (evt) => {
   lat = coord.lat
 
   marker.setLngLat(coord).addTo(map);
+  xFormElement.value = lat;
+  yFormElement.value = lng;
 
-  getElevation();
 });
-
-
-async function getElevation() {
-  const query = await fetch(
-    `https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/${lng},${lat}.json?layers=contour&limit=50&access_token=${mapboxgl.accessToken}`,
-    { method: 'GET'}
-  );
-  if (query.status !== 200) return;
-  await query.json();
-  formElement.textContent = lngLat.toFixed(6)
-
+const addLayerToMap = (data) => {
+  map.addSource("data", {
+    type: "geojson",
+    data: {
+      type: "FeatureCollection",
+      features: [],
+    }
+  })
+  map.addLayer({
+    id: "layer",
+    type: "fill",
+    source: "data", 
+    layout: {},
+    paint: {
+      "fill-color": "#0080ff", 
+      "fill-opacity": 0.5,
+    },
+  })
 }
 
-async function getResult() {
-  preventDefault();
-  const queryForm = await fetch(
-    `${baseURL}?city=${cityElement.value}&x_from=${xFormElement.value}&y_from=${yFormElement.value}&view_distance=${viewElement.value}`,
-    {method: 'GET', headers: {'Content-Type': 'application/json'}}
-  );
-  if (queryForm.status !== 200) return;
-  await queryForm.json()
+const blockSubmitButton = () => {
+  sendFormElement.disabled = true;
 }
+const unblockSubmitButton = () => {
+  sendFormElement.disabled = false;
+};
+
+formElement.addEventListener('submit', (evt) => {
+
+  //evt.preventDefault();
+
+  if (evt === "") {
+    blockSubmitButton();
+
+    sendData(
+      () => {
+        unblockSubmitButton();
+      },
+      new FormData(evt.target)
+    );
+  }
+
+
+
+  fetch(`${baseURL}?city=${cityElement.value}&x_from=${xFormElement.value}&y_from=${yFormElement.value}&view_distance=${viewElement.value}`,{
+    method: "GET",
+    headers: {"Content-Type": "application/json"}
+  }) 
+
+  .then(
+
+
+    map.on('load', () => {
+      addLayer(data)({
+        id: "",
+        type: "line",
+        source: "data",
+        layout: {},
+        paint: {
+        "line-color": "#000",
+        "line-width": 3
+        }
+      })
+    }) 
+  )
+})   
+  
+  console.log(addLayerToMap)
+

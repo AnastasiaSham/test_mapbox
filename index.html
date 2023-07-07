@@ -5,12 +5,9 @@
     <title>Mapbox test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link
-      href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.css"
-      rel="stylesheet"
-    />
-    <link href="style.css" rel="stylesheet" />
-    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.14.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <link href="style.css" rel="stylesheet">
   </head>
   <body>
   
@@ -19,18 +16,22 @@
       <div id="upload">
         <form
           class="upload-form__select"
-          id="upload-form">
+          name="upload-form"
+          id="upload-form"
+          method="get"
+          action="http://10.32.1.65:5000/api/v2/visibility_analysis/visibility_analysis">
           <div class="upload-form__wrapper">
             <label class="upload-form__label-title">city</label>
           </div>
           <div class="upload-form__wrapper">
             <input
               type="string"
+              name="city"
               id="city"
               class="upload-form__input"
               autocomplete="on"
               placeholder="saint-petersburg"
-              value
+              value="saint-petersburg"
               required>
           </div>
           <div class="upload-form__wrapper">
@@ -41,6 +42,7 @@
               <span class="upload-form__label">x_from
                 <input
                   type="text"
+                  name="x_from"
                   id="x_from"
                   class="upload-form__coordinates"
                   autocomplete="on"
@@ -53,6 +55,7 @@
               <span class="upload-form__label">y_from
                 <input
                   type="text"
+                  name="y_from"
                   id="y_from"
                   class="upload-form__coordinates"
                   autocomplete="on"
@@ -68,6 +71,7 @@
           <div class="upload-form__wrapper">
             <input
               type="text"
+              name="view_distance"
               id="view_distance"
               class="upload-form__input"
               autocomplete="on"
