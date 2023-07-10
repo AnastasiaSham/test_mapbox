@@ -1,5 +1,3 @@
-//require('dotenv').config()
-
 mapboxgl.accessToken = procces.env.REST_TOKEN;
 
 const map = new mapboxgl.Map({
@@ -35,22 +33,6 @@ map.on('click', (evt) => {
 });
 
 const addRouteLayer = (json) => {
- /* map.addSource("route", {
-    type: "geojson",
-    data: {
-      type: "FeatureCollection",
-      features: [],
-    }
-  });
-  map.addLayer({
-    id: "route",
-    type: "line",
-    source: "isochrone",
-    paint: {
-      'line-color': '#877b59',
-      'line-width': 1
-    }
-  });*/
   console.log(json);
 }
 
@@ -96,5 +78,3 @@ const formSubmitHandler = (evt => {
 })
 
 formElement.addEventListener('submit', formSubmitHandler)
-
-
