@@ -1,7 +1,6 @@
 //require('dotenv').config()
 
-
-mapboxgl.accessToken = "pk.eyJ1Ijoic2hhbS1hbmFzdGFzaWEiLCJhIjoiY2xpeDdiMTZqMDU1ODNlbzE1eTU3eDB3cSJ9.v94ID-OfPNLsdY3TkQ3RHQ";
+mapboxgl.accessToken = procces.env.REST_TOKEN;
 
 const map = new mapboxgl.Map({
   container: "map",
@@ -22,6 +21,7 @@ const sendFormElement = document.getElementById('upload-submit');
 const marker = new mapboxgl.Marker({
   'color': '#314ccd'
 })
+
 map.on('click', (evt) => {
 
   const coord = evt.lngLat;
@@ -30,76 +30,71 @@ map.on('click', (evt) => {
   lat = coord.lat
 
   marker.setLngLat(coord).addTo(map);
-  xFormElement.value = lat;
-  yFormElement.value = lng;
-
+  xFormElement.value = lat.toFixed(6);
+  yFormElement.value = lng.toFixed(6);
 });
-const addLayerToMap = (data) => {
-  map.addSource("data", {
+
+const addRouteLayer = (json) => {
+ /* map.addSource("route", {
     type: "geojson",
     data: {
       type: "FeatureCollection",
       features: [],
     }
-  })
+  });
   map.addLayer({
-    id: "layer",
+    id: "route",
+    type: "line",
+    source: "isochrone",
+    paint: {
+      'line-color': '#877b59',
+      'line-width': 1
+    }
+  });*/
+  console.log(json);
+}
+
+const addLayerToMap = (data) => {
+  map.addSource("isochrone", {
+    type: "geojson",
+    data: {
+      type: "FeatureCollection",
+      features: [],
+    }
+  });
+  map.addLayer({
+    id: "isochrone",
     type: "fill",
-    source: "data", 
+    source: "isochrone", 
     layout: {},
     paint: {
-      "fill-color": "#0080ff", 
-      "fill-opacity": 0.5,
+      'fill-color': "#0080ff", 
+      'fill-opacity': 0.5,
     },
-  })
+  });
+  map.addLayer({
+    id: "route",
+    type: "line",
+    source: "isochrone",
+    paint: {
+      'line-color': '#877b59',
+      'line-width': 1
+    }
+  });
+  console.log(addLayerToMap(data));
 }
 
-const blockSubmitButton = () => {
-  sendFormElement.disabled = true;
-}
-const unblockSubmitButton = () => {
-  sendFormElement.disabled = false;
-};
-
-formElement.addEventListener('submit', (evt) => {
-
-  //evt.preventDefault();
-
-  if (evt === "") {
-    blockSubmitButton();
-
-    sendData(
-      () => {
-        unblockSubmitButton();
-      },
-      new FormData(evt.target)
-    );
-  }
-
-
+const formSubmitHandler = (evt => {
+  evt.preventDefault()
 
   fetch(`${baseURL}?city=${cityElement.value}&x_from=${xFormElement.value}&y_from=${yFormElement.value}&view_distance=${viewElement.value}`,{
     method: "GET",
     headers: {"Content-Type": "application/json"}
   }) 
+  .then(data => data.json())
+  .then(addRouteLayer)
+})
 
-  .then(
+formElement.addEventListener('submit', formSubmitHandler)
 
-
-    map.on('load', () => {
-      addLayer(data)({
-        id: "",
-        type: "line",
-        source: "data",
-        layout: {},
-        paint: {
-        "line-color": "#000",
-        "line-width": 3
-        }
-      })
-    }) 
-  )
-})   
-  
-  console.log(addLayerToMap)
 
