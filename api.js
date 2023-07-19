@@ -1,10 +1,10 @@
-mapboxgl.accessToken = procces.env.REST_TOKEN;
+mapboxgl.accessToken = REST_TOKEN;
 
 const map = new mapboxgl.Map({
   container: "map",
   style: "mapbox://styles/mapbox/streets-v12",
   center: [30.317404, 59.951005], 
-  zoom: 10, 
+  zoom: 12, 
 })
 
 const baseURL = 'http://10.32.1.65:5000/api/v2/visibility_analysis/visibility_analysis';
@@ -20,6 +20,14 @@ const marker = new mapboxgl.Marker({
   'color': '#314ccd'
 })
 
+const layerPaint = {
+  'fill-color': "#0080ff", 
+  'fill-opacity': 0.5,
+};
+
+const sourceName = "isochrone";
+
+
 map.on('click', (evt) => {
 
   const coord = evt.lngLat;
@@ -30,41 +38,31 @@ map.on('click', (evt) => {
   marker.setLngLat(coord).addTo(map);
   xFormElement.value = lat.toFixed(6);
   yFormElement.value = lng.toFixed(6);
+
 });
 
 const addRouteLayer = (json) => {
   console.log(json);
+  return json
 }
 
-const addLayerToMap = (data) => {
-  map.addSource("isochrone", {
-    type: "geojson",
-    data: {
-      type: "FeatureCollection",
-      features: [],
-    }
-  });
-  map.addLayer({
-    id: "isochrone",
-    type: "fill",
-    source: "isochrone", 
-    layout: {},
-    paint: {
-      'fill-color': "#0080ff", 
-      'fill-opacity': 0.5,
-    },
-  });
-  map.addLayer({
-    id: "route",
-    type: "line",
-    source: "isochrone",
-    paint: {
-      'line-color': '#877b59',
-      'line-width': 1
-    }
-  });
-  console.log(addLayerToMap(data));
-}
+map.on('load', () => { 
+    map.addSource(sourceName, {
+      type: "geojson",
+      data: {
+        'type': 'FeatureCollection',
+        'features': []
+      }
+    });
+
+    map.addLayer({
+      id: "polygon",
+      type: "fill",
+      source: sourceName, 
+      layout: {},
+      paint: layerPaint
+    });
+})
 
 const formSubmitHandler = (evt => {
   evt.preventDefault()
@@ -74,7 +72,12 @@ const formSubmitHandler = (evt => {
     headers: {"Content-Type": "application/json"}
   }) 
   .then(data => data.json())
-  .then(addRouteLayer)
+  .then(data => updateSource(data))
 })
+
+let updateSource = (geojson) => {
+  map.getSource(sourceName).setData(geojson);
+}
+
 
 formElement.addEventListener('submit', formSubmitHandler)
